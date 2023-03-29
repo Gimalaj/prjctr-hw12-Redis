@@ -1,0 +1,48 @@
+version: '3.6'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  redis:
+    container_name: redis-master
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=root
+      - REDIS_PASSWORD=qazSedcS123
+    networks:
+      - app-tier
+    ports:
+      - '6379'
+    volumes:
+      - './etc/redis-master/redis.conf:/opt/bitnami/redis/etc/redis.conf'
+
+  redis-slave:
+    container_name: redis-slave
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PASSWORD=qazSedcS123
+      - REDIS_PASSWORD=qazSedcS123
+    ports:
+      - '6379'
+    depends_on:
+      - redis
+    networks:
+      - app-tier
+
+
+  redis-sentinel:
+    container_name: redis-sentinel
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=qazSedcS123
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - '26379-26381:26379'
+    networks:
+      - app-tier
