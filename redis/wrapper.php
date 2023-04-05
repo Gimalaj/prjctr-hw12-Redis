@@ -12,7 +12,7 @@ $connection = new Predis\Client($sentinels, [
     'replication' => 'sentinel',
     'service' => 'mymaster',
     'parameters' => [
-        'password' => 'str0ng_passw0rd',
+        'password' => 'qazSedcS123',
     ]
 ]);
 
