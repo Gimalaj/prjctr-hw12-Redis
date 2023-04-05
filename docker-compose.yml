@@ -6,20 +6,18 @@ networks:
 
 services:
   redis:
-    container_name: redis-master
     image: 'bitnami/redis:latest'
     environment:
-      - REDIS_REPLICATION_MODE=root
+      - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=qazSedcS123
     networks:
       - app-tier
     ports:
       - '6379'
     volumes:
-      - './etc/redis-master/redis.conf:/opt/bitnami/redis/etc/redis.conf'
+      - './redis.conf:/opt/bitnami/redis/etc/redis.conf'
 
   redis-slave:
-    container_name: redis-slave
     image: 'bitnami/redis:latest'
     environment:
       - REDIS_REPLICATION_MODE=slave
@@ -35,7 +33,6 @@ services:
 
 
   redis-sentinel:
-    container_name: redis-sentinel
     image: 'bitnami/redis-sentinel:latest'
     environment:
       - REDIS_MASTER_PASSWORD=qazSedcS123
